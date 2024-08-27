@@ -1,5 +1,7 @@
 import os
 import sys
+import time
+import csv
 
 # Change these information before using
 interface = "enp1s0"
@@ -7,6 +9,9 @@ interface = "enp1s0"
 # host_ipaddress = "192.168.122.159"
 des_ipaddress_1 = "192.168.122.160"
 des_ipaddress_2 = "192.168.122.161"
+sleep_time = 1
+local_csv_file = "B_2018.01.19_07.31.48.csv"
+
 
 # def ssh():
 #     os.system(f"ssh {host_username}@{host_ipaddress}")
@@ -47,11 +52,31 @@ def advance(delay, jitter, bandwidth):
     #       - "flowid 1:1": Specifies that packets matching this filter should be directed to the class with the ID 1:1. 
     #         This class is part of the queuing discipline with the root handle 1:.
 
-def datatrace():
+def datatrace(delay, jitter):
     os.system(f"sudo tc qdisc add dev {interface} root handle 1: htb")
-    os.system(f"sudo tc class add dev {interface} parent 1: classid 1:1 htb rate {bandwidth}mbit")
+    os.system(f"sudo tc class add dev {interface} parent 1: classid 1:1 htb rate 100mbit")
     os.system(f"sudo tc qdisc add dev {interface} parent 1:1 handle 10: netem delay {delay}ms {jitter}ms")
-    os.system(f"sudo tc filter add dev {interface} protocol ip parent 1:0 prio 1 u32 match ip dst {des_ipaddress}/32 flowid 1:1")
+    os.system(f"sudo tc filter add dev {interface} protocol ip parent 1:0 prio 1 u32 match ip dst {des_ipaddress_1}/32 flowid 1:1")
+    os.system(f"sudo tc filter add dev {interface} protocol ip parent 1:0 prio 1 u32 match ip dst {des_ipaddress_2}/32 flowid 1:1")
+    
+    while True:
+        with open(f'{local_csv_file}') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            line_count = 0
+            
+            for row in csv_reader:
+                if line_count == 0:
+                    line_count +=1
+                    time.sleep(sleep_time)
+                    continue
+                bandwidth = int(float(row[12]) / 1000)
+                
+                print(f"konnichiwa {line_count} {bandwidth}mbit")
+                
+                os.system(f"tc class change dev {interface} parent 1: classid 1:1 htb rate {bandwidth}mbit")
+
+                line_count += 1
+                time.sleep(sleep_time)    
 
 
 if __name__ == "__main__":
