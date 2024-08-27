@@ -3,18 +3,36 @@ import sys
 
 # Change these information before using
 interface = "enp1s0"
-des_ipaddress = "192.168.122.160"
+# host_username = "thai"
+# host_ipaddress = "192.168.122.159"
+des_ipaddress_1 = "192.168.122.160"
+des_ipaddress_2 = "192.168.122.161"
 
-def undelay():
+# def ssh():
+#     os.system(f"ssh {host_username}@{host_ipaddress}")
+
+def unset():
     os.system(f"sudo tc qdisc del dev {interface} root")
 
-# interface, host_password, des_ipaddress, delay, jitter, bandwidth
+def static(delay):
+    os.system(f"sudo tc qdisc add dev {interface} root handle 1: prio")
+    os.system(f"sudo tc qdisc add dev {interface} parent 1:1 handle 10: netem delay {delay}ms")
+    os.system(f"sudo tc filter add dev {interface} protocol ip parent 1:0 prio 1 u32 match ip dst {des_ipaddress_1}/32 flowid 1:1")
+    os.system(f"sudo tc filter add dev {interface} protocol ip parent 1:0 prio 1 u32 match ip dst {des_ipaddress_2}/32 flowid 1:1")
 
-def delay(des_ipaddress, delay, jitter, bandwidth):
+def var(delay, jitter):
+    os.system(f"sudo tc qdisc add dev {interface} root handle 1: prio")
+    os.system(f"sudo tc qdisc add dev {interface} parent 1:1 handle 10: netem delay {delay}ms {jitter}ms")
+    os.system(f"sudo tc filter add dev {interface} protocol ip parent 1:0 prio 1 u32 match ip dst {des_ipaddress_1}/32 flowid 1:1")
+    os.system(f"sudo tc filter add dev {interface} protocol ip parent 1:0 prio 1 u32 match ip dst {des_ipaddress_2}/32 flowid 1:1")
+
+
+def advance(delay, jitter, bandwidth):
     os.system(f"sudo tc qdisc add dev {interface} root handle 1: htb")
     os.system(f"sudo tc class add dev {interface} parent 1: classid 1:1 htb rate {bandwidth}mbit")
     os.system(f"sudo tc qdisc add dev {interface} parent 1:1 handle 10: netem delay {delay}ms {jitter}ms")
-    os.system(f"sudo tc filter add dev {interface} protocol ip parent 1:0 prio 1 u32 match ip dst {des_ipaddress}/32 flowid 1:1")
+    os.system(f"sudo tc filter add dev {interface} protocol ip parent 1:0 prio 1 u32 match ip dst {des_ipaddress_1}/32 flowid 1:1")
+    os.system(f"sudo tc filter add dev {interface} protocol ip parent 1:0 prio 1 u32 match ip dst {des_ipaddress_2}/32 flowid 1:1")
     # BREAKDOWN:
     #       - "parent 1:0": Indicates the parent qdisc or class to which this filter is attached. 
     #         Here, 1: is the handle of the root qdisc, and 0 specifies the root of this qdisc.
@@ -28,6 +46,12 @@ def delay(des_ipaddress, delay, jitter, bandwidth):
     #         The 0xffff is a mask that specifies an exact match on the port number (all 16 bits).
     #       - "flowid 1:1": Specifies that packets matching this filter should be directed to the class with the ID 1:1. 
     #         This class is part of the queuing discipline with the root handle 1:.
+
+def datatrace():
+    os.system(f"sudo tc qdisc add dev {interface} root handle 1: htb")
+    os.system(f"sudo tc class add dev {interface} parent 1: classid 1:1 htb rate {bandwidth}mbit")
+    os.system(f"sudo tc qdisc add dev {interface} parent 1:1 handle 10: netem delay {delay}ms {jitter}ms")
+    os.system(f"sudo tc filter add dev {interface} protocol ip parent 1:0 prio 1 u32 match ip dst {des_ipaddress}/32 flowid 1:1")
 
 
 if __name__ == "__main__":
