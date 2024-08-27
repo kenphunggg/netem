@@ -73,7 +73,7 @@ def datatrace(delay, jitter):
                 
                 print(f"konnichiwa {line_count} {bandwidth}mbit")
                 
-                os.system(f"tc class change dev {interface} parent 1: classid 1:1 htb rate {bandwidth}mbit")
+                os.system(f"sudo tc class change dev {interface} parent 1: classid 1:1 htb rate {bandwidth}mbit")
 
                 line_count += 1
                 time.sleep(sleep_time)    
