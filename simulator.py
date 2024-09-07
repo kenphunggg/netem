@@ -60,7 +60,7 @@ def datatrace(delay, jitter):
     os.system(f"sudo tc filter add dev {interface} protocol ip parent 1:0 prio 1 u32 match ip dst {des_ipaddress_2}/32 flowid 1:1")
     
     while True:
-        with open(f'{local_csv_file}') as csv_file:
+        with open(local_csv_file) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             line_count = 0
             
