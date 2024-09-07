@@ -13,8 +13,6 @@ sleep_time = 1
 local_csv_file = "B_2018.01.19_07.31.48.csv"
 
 
-# def ssh():
-#     os.system(f"ssh {host_username}@{host_ipaddress}")
 
 def unset():
     os.system(f"sudo tc qdisc del dev {interface} root")
