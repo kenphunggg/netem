@@ -4,7 +4,7 @@ import time
 import csv
 
 # Change these information before using
-interface = "enp1s0"
+interface = "ens33"
 # host_username = "thai"
 # host_ipaddress = "192.168.122.159"
 des_ipaddress_1 = "192.168.122.160"
