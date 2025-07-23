@@ -1,18 +1,17 @@
 {
+    "interface": "ens33",
     "hosts": [
         {
             "ip_address": "192.168.17.162",
-            "interface": "ens33",
-            "latency": 700,
-            "jitter": -1,
-            "bandwidth": -1
+            "latency": 200,
+            "jitter": 20,
+            "bandwidth": 600
         },
         {
             "ip_address": "192.168.17.163",
-            "interface": "ens33",
-            "latency": 500,
-            "jitter": -1,
-            "bandwidth": -1
+            "latency": 50,
+            "jitter": 10,
+            "bandwidth": 12000
         }
     ]
 }

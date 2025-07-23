@@ -12,24 +12,23 @@ python3 netem.py reset
 
 ### Manual use
 
-First, you need to adjust `cfg.json`. `-1` value mean unset
+First, you need to adjust `cfg.json`.
 
 ```json
 {
+    "interface": "ens33",
     "hosts": [
         {
-            "ip_address": "192.168.17.163",
-            "interface": "ens33",
-            "latency": 50,
-            "jitter": -1,
-            "bandwidth": -1
+            "ip_address": "192.168.17.162",
+            "latency": 200,
+            "jitter": 20,
+            "bandwidth": 600
         },
         {
-            "ip_address": "192.168.17.162",
-            "interface": "ens33",
-            "latency": 700,
-            "jitter": -1,
-            "bandwidth": -1
+            "ip_address": "192.168.17.163",
+            "latency": 50,
+            "jitter": 10,
+            "bandwidth": 12000
         }
     ]
 }
