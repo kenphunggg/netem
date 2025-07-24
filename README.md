@@ -14,6 +14,13 @@ python3 netem.py reset
 
 First, you need to adjust `cfg.json`.
 
+Unit of `latency` and `jitter` is `ms` stands for miliseconds
+
+Unit of `bandwidth` is `kbit` stands for `kilobit/sec`
+
+> [!NOTE]
+> 8 kilobit/sec = 1 kilobyte/sec
+
 ```json
 {
     "interface": "ens33",
