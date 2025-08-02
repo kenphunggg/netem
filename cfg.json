@@ -9,8 +9,8 @@
         },
         {
             "ip_address": "192.168.17.163",
-            "latency": 50,
-            "jitter": 10,
+            "latency": 20,
+            "jitter": 3,
             "bandwidth": 12000
         }
     ]
